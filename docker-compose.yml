@@ -1,4 +1,51 @@
 
+# services:
+#   app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     image: localpro-app
+#     container_name: localpro-app
+#     restart: unless-stopped
+#     working_dir: /app
+#     volumes:
+#       - .:/app
+#       - /app/node_modules
+#     networks:
+#       - localpro
+#     environment:
+#       - NODE_ENV=production
+#     command: >
+#       sh -c "
+#         echo 'Building LocalPro...';
+#         npm install &&
+#         npm run build &&
+#         npm run start
+#       "
+#     ports:
+#       - "3001:3001"
+
+#   webserver:
+#     image: nginx:alpine
+#     container_name: localpro-webserver
+#     restart: unless-stopped
+#     ports:
+#       - "8080:80"   # ← Port 8080 au lieu de 80
+#       - "8443:443"  # ← Port 8443 au lieu de 443
+#     volumes:
+#       - .:/app
+#       - ./docker/nginx/public.conf:/etc/nginx/conf.d/default.conf
+#       - ./docker/nginx/ssl:/etc/nginx/ssl
+#     depends_on:
+#       - app
+#     networks:
+#       - localpro
+
+# networks:
+#   localpro:
+#     driver: bridge
+
+
 services:
   app:
     build:
@@ -8,20 +55,23 @@ services:
     container_name: localpro-app
     restart: unless-stopped
     working_dir: /app
-    volumes:
-      - .:/app
-      - /app/node_modules
+    # SUPPRIMÉ: volumes qui créent des conflits de permissions
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
     networks:
       - localpro
     environment:
       - NODE_ENV=production
-    command: >
-      sh -c "
-        echo 'Building LocalPro...';
-        npm install &&
-        npm run build &&
-        npm run start
-      "
+    # SUPPRIMÉ: command qui écrase le CMD du Dockerfile
+    # Le Dockerfile fait déjà le build et lance 'serve'
+    # command: >
+    #   sh -c "
+    #     echo 'Building LocalPro...';
+    #     npm install &&
+    #     npm run build &&
+    #     npm run start
+    #   "
     ports:
       - "3001:3001"
 
@@ -30,12 +80,13 @@ services:
     container_name: localpro-webserver
     restart: unless-stopped
     ports:
-      - "8080:80"   # ← Port 8080 au lieu de 80
-      - "8443:443"  # ← Port 8443 au lieu de 443
+      - "8080:80"   # Port 8080 au lieu de 80
+      - "8443:443"  # Port 8443 au lieu de 443
     volumes:
-      - .:/app
       - ./docker/nginx/public.conf:/etc/nginx/conf.d/default.conf
       - ./docker/nginx/ssl:/etc/nginx/ssl
+      # SUPPRIMÉ: volume de l'app car nginx n'en a pas besoin
+      # - .:/app
     depends_on:
       - app
     networks:
