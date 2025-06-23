@@ -80,8 +80,8 @@ services:
     container_name: localpro-webserver
     restart: unless-stopped
     ports:
-      - "80:80"     # Port 80 standard au lieu de 8080
-      - "443:443"   # Port 443 standard au lieu de 8443
+      - "8080:80"
+      - "8443:443"
     volumes:
       - ./docker/nginx/public.conf:/etc/nginx/conf.d/default.conf
       - ./docker/ssl:/etc/ssl
