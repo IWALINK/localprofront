@@ -1,0 +1,16 @@
+services:
+  nextjs:
+    container_name: localpro-nextjs
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - localpro-net
+
+networks:
+  localpro-net:
+    driver: bridge
