@@ -84,7 +84,7 @@ services:
       - "8443:443"  # Port 8443 au lieu de 443
     volumes:
       - ./docker/nginx/public.conf:/etc/nginx/conf.d/default.conf
-      - ./docker/ssl:/etc/nginx/ssl
+      - ./docker/ssl:/etc/ssl
       # SUPPRIMÉ: volume de l'app car nginx n'en a pas besoin
       # - .:/app
     depends_on:
